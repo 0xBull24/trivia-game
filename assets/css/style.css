@@ -1,0 +1,26 @@
+/* All Font */
+* {
+    font-family: 'Permanent Marker', cursive;
+    color: #eeeeee;
+}
+
+/* Body */
+body {
+    background-image: url('/assets/images/concert.jpg');
+    background-size: cover;
+}
+
+/* Trivia Box */
+.container {
+    border: 3px solid #bbb;
+    margin:100px auto;
+    background-color: black
+}
+
+.trivia-box {
+    text-align: center;
+}
+
+#choices {
+    margin: 50px;
+}

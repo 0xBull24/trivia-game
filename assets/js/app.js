@@ -1,23 +1,34 @@
 'use strict';
+const guessTime = 20
 
 let game = {
 
     // Parameters
     correct: 0,
     incorrect: 0,
-    time: 10,
+    time: guessTime,
     timer: '',
     questionNumber: 0,
+    playerChoice: '',
 
     // Methods
     decreaseTime: () => {
         $('#timeRemaining').text(`Time Remaining: ${game.time}`)
         game.time--
 
+        if (game.time < 10) {
+            $('#timeRemaining').attr('style', 'color: red;')
+        }
+
         // Stop the timer from running pass 0
         if (game.time === -1){
             game.stopTimer(game.timer)
             game.resetTime()
+            $('#question').empty()
+            $('#choices').empty()
+            $('#choices').html(`<h1> Sorry, better luck next time!`)
+            $('#timeRemaining').removeAttr('style')
+            game.incorrect++
         }
     },
 
@@ -45,7 +56,7 @@ let game = {
     },
 
     resetTime: () => {
-        game.time = 10;
+        game.time = guessTime;
     },
 
     resetGame: () => {  
@@ -61,18 +72,38 @@ let game = {
 
         $('#question').text(Object.entries(triviaQuestions)[game.questionNumber][1].question)
         Object.entries(triviaQuestions)[game.questionNumber][1].choices.forEach(value => {
-            $('#choices').append(`<p> ${value}`)
+            $('#choices').append(`<p class="playerchoice"> ${value}`)
         })
         
     },
 
+    // End game results
     displayResults: () => {
-        $('#question').empty()
+        $('#question').empty() 
         $('#choices').empty()
         $('#question').html(`
         <h1> Number of answers correct: ${game.correct}
         <h1> Number of answers incorrect: ${game.incorrect}`)
-    }
+    },
+
+    checkAnswer: (playerChoice) => {
+        if (playerChoice === Object.entries(triviaQuestions)[game.questionNumber][1].answer){
+            $('#question').empty()
+            $('#choices').empty()
+            $('#choices').html(`<h1> Good job! Get ready for the next!`)
+            $('#timeRemaining').removeAttr('style')
+            game.time = 3
+            game.correct++
+        }
+        else {
+            $('#question').empty()
+            $('#choices').empty()
+            $('#choices').html(`<h1> Sorry, better luck next time!`)
+            $('#timeRemaining').removeAttr('style')
+            game.time = 3
+            game.incorrect++
+        }
+    },
 
 }
 
@@ -80,17 +111,17 @@ let triviaQuestions = {
     q1: {
         question: "On initial listen, you may have thought 'Panda' was performed by which artist?",
         choices: ['Big Sean', 'Future', 'Desiigner', 'Lil Pump'],
-        answer: 'Desiigner'
+        answer: 'Future'
     },
     q2: {
         question: "Drake wore a jersey supporting this NBA All-Star in his new video 'In My Feelings' ",
         choices: ['Damian Lillard', 'Lebron James', 'Kevin Durant', 'Demarcus Cousins'],
-        answer: ''
+        answer: 'Demarcus Cousins'
     },
     q3: {
-        question: "question 3",
-        choices: ['', '', '', ''],
-        answer: ''
+        question: "Hey ___________ you want to come outside?",
+        choices: ['Chance', 'Quavo', 'Pierre', 'Donald'],
+        answer: 'Pierre'
     },
     q4: {
         question: "I-N-D-E-P-E-N-D-E-N-T, do you know what that mean was sung by who?",
@@ -104,6 +135,11 @@ $(document).ready(function() {
 
     game.startTimer()
     game.display()
-    
 
+    $('#choices').click((event) => {
+        game.playerChoice = $(event.target).text().trim()
+        console.log(game.playerChoice)
+        game.checkAnswer(game.playerChoice)
+    })
+    
 })

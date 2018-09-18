@@ -26,7 +26,6 @@ let game = {
             game.resetTime()
             $('#question').empty()
             $('#choices').empty()
-            $('#choices').html(`<h1> Sorry, better luck next time!`)
             $('#timeRemaining').removeAttr('style')
             game.incorrect++
         }
@@ -94,13 +93,13 @@ let game = {
             $('#choices').html(`<h1> Good job! Get ready for the next!`)
             $('#timeRemaining').removeAttr('style')
             game.correct++
+            game.incorrect--
         }
         else {
             $('#question').empty()
             $('#choices').empty()
             $('#choices').html(`<h1> Sorry, better luck next time!`)
             $('#timeRemaining').removeAttr('style')
-            game.incorrect++
         }
     },
 

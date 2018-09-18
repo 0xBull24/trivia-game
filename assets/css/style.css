@@ -6,7 +6,7 @@
 
 /* Body */
 body {
-    background-image: url('/assets/images/concert.jpg');
+    background-image: url('../images/concert.jpg');
     background-size: cover;
 }
 

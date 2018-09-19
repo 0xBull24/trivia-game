@@ -41,8 +41,7 @@ let game = {
         clearInterval(timer)
         game.questionNumber++
 
-        if (game.questionNumber === 4){
-            console.log(`end of game`)
+        if (game.questionNumber === Object.keys(triviaQuestions).length){
             // Display results
             setTimeout(game.displayResults, 2000)
         }
@@ -54,6 +53,26 @@ let game = {
         }
     },
 
+    showStart: () => {
+
+        // Clear Trivia box
+        $('#timeRemaining').hide()
+        $('#question').hide()
+        $('#choices').hide()
+
+        $('#start').html(`<button style="background-color: black; margin-top: 20px"> Start Game`)
+
+    },
+
+    startGame: () => {
+        $('#timeRemaining').show()
+        $('#question').show()
+        $('#choices').show()
+        $('#start').hide()
+        game.startTimer()
+        game.display()
+    },
+
     resetTime: () => {
         game.time = guessTime;
     },
@@ -63,6 +82,7 @@ let game = {
         game.incorrect = 0
         game.questionNumber = 0
         game.resetTime()
+        game.startGame()
     },
 
     display: () => {
@@ -84,6 +104,8 @@ let game = {
         $('#question').html(`
         <h1> Number of answers correct: ${game.correct}
         <h1> Number of answers incorrect: ${game.incorrect}`)
+        $('#reset').html(`<button style="background-color: black; margin-top: 20px"> PLay Again?`)
+
     },
 
     checkAnswer: (playerChoice) => {
@@ -92,6 +114,7 @@ let game = {
             $('#choices').empty()
             $('#choices').html(`<h1> Good job! Get ready for the next!`)
             $('#timeRemaining').removeAttr('style')
+            game.time = 3
             game.correct++
             game.incorrect--
         }
@@ -100,6 +123,7 @@ let game = {
             $('#choices').empty()
             $('#choices').html(`<h1> Sorry, better luck next time!`)
             $('#timeRemaining').removeAttr('style')
+            game.time = 3
         }
     },
 
@@ -131,13 +155,24 @@ let triviaQuestions = {
 // When page Loads
 $(document).ready(function() {
 
-    game.startTimer()
-    game.display()
+    game.showStart();
 
+    // Start Game button
+    $('#start').click(() => {
+        game.startGame();
+    })
+
+    // Select choices from the player
     $('#choices').click((event) => {
         game.playerChoice = $(event.target).text().trim()
-        console.log(game.playerChoice)
         game.checkAnswer(game.playerChoice)
     })
+
+    // Play Again Button
+    $('#reset').click(() => {
+        game.resetGame();
+    })
+
+    
     
 })
